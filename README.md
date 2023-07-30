@@ -1,5 +1,5 @@
 # XSegNet2onnx
-convert DeepFaceLab XSegNet's *.npy weights to onnx file
+convert DeepFaceLab XSegNet's *.npy weights to onnx file. Inference time is optimized from 500ms to 90ms.
 
 # usage
 ## generate you own onnx file
@@ -11,7 +11,7 @@ convert DeepFaceLab XSegNet's *.npy weights to onnx file
 6. (optinal) install onnxsim `pip install onnxsim` and run `onnxsim .\xseg.onnx .\xseg.sim.onnx`.
 
 ## use onnx file to predict
-see `test_seg.py`.
+see `test_seg_onnx.py`.
 
 # issue
 Because of [Conv2d_transpose requires asymmetric padding which the CUDA EP currently does not support #11312](https://github.com/microsoft/onnxruntime/issues/11312), XSegNet OnnxRuntime does not support CudaExcuation.
