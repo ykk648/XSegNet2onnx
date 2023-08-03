@@ -14,5 +14,5 @@ convert DeepFaceLab XSegNet's *.npy weights to onnx file. Inference time is opti
 see `test_seg_onnx.py`.
 
 # issue
-Because of [Conv2d_transpose requires asymmetric padding which the CUDA EP currently does not support #11312](https://github.com/microsoft/onnxruntime/issues/11312), XSegNet OnnxRuntime does not support CudaExcuation.
+Because of [Conv2d_transpose requires asymmetric padding which the CUDA EP currently does not support #11312](https://github.com/microsoft/onnxruntime/issues/11312), XSegNet OnnxRuntime Conv2d_transpose layer does not support CudaExcuation.
 

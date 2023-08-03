@@ -5,7 +5,7 @@ import time
 
 def load_xseg_model():
     xseg_session = onnxruntime.InferenceSession(
-        "./xseg.sim.onnx", providers=["CPUExecutionProvider"])
+        "./xseg.onnx", providers=["CUDAExecutionProvider"])
     return xseg_session
 
 def infer(xseg, input_image):
@@ -43,10 +43,11 @@ if __name__ == "__main__":
     img = cv2.imread(img_file)
     xseg = load_xseg_model()
 
-    t0 = time.time()
-    mask = apply_xseg(xseg, img)
-    t1 = time.time()
-    print("time: ", t1 - t0)
+    for i in range(10):
+        t0 = time.time()
+        mask = apply_xseg(xseg, img)
+        t1 = time.time()
+        print("time: ", t1 - t0)
 
     mask[mask == 1] = 255
     cv2.imshow("mask", mask)
