@@ -21,7 +21,7 @@ class XSegNet(object):
                  run_on_cpu=False,
                  data_format="NHWC",
                  raise_on_no_model_files=False,
-                 export_weights=False
+                 export_weights=True
                  ):
 
         self.resolution = resolution
@@ -78,7 +78,7 @@ class XSegNet(object):
 
         if export_weights:
             nn.tf.enable_resource_variables()
-            nn.tf.saved_model.simple_save(nn.tf_sess,".\\saved_model", inputs={"input": self.input_t}, outputs={"output": pred})
+            nn.tf.saved_model.simple_save(nn.tf_sess,"./saved_model", inputs={"input": self.input_t}, outputs={"output": pred})
 
     def get_resolution(self):
         return self.resolution
