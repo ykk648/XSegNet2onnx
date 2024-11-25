@@ -7,7 +7,7 @@ from xseg_lib.core.leras import nn
 from xseg_lib.facelib import XSegNet
 
 
-def get_xseg(model_path="./weights"):
+def get_xseg(model_path=r".\weights"):
     model_path = Path(model_path)
     if not model_path.exists():
         raise ValueError(f'{model_path} not found. Please ensure it exists.')

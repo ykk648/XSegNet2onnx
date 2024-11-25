@@ -78,7 +78,7 @@ class XSegNet(object):
 
         if export_weights:
             nn.tf.enable_resource_variables()
-            nn.tf.saved_model.simple_save(nn.tf_sess,"./saved_model", inputs={"input": self.input_t}, outputs={"output": pred})
+            nn.tf.saved_model.simple_save(nn.tf_sess, r".\\saved_model", inputs={"input": self.input_t}, outputs={"output": pred})
 
     def get_resolution(self):
         return self.resolution

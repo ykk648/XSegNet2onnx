@@ -7,7 +7,7 @@ from xseg_lib import get_xseg, apply_xseg
 
 
 if __name__ == "__main__":
-    img_file = ""
+    img_file = r".\\weights\\tgt.jpg"
     img = cv2.imread(img_file)
     xseg = get_xseg()
 
