@@ -53,12 +53,25 @@ class XSegNet(object):
         with tf.device('/CPU:0' if run_on_cpu else nn.tf_default_device_name):
             _, pred = self.model(self.input_t)
 
+        # Store intermediate layer tensors
+        self.layer_tensors = []
+        def collect_layer_tensors(layer):
+            if isinstance(layer, nn.Conv2D) or isinstance(layer, nn.Conv2DTranspose):
+                self.layer_tensors.append(layer.get_output_tensor())
+        self.model.traverse_layers(collect_layer_tensors)
+        
+        # Add final output to layer tensors
+        self.layer_tensors.append(pred)
+        
         def net_run(input_np):
-            return nn.tf_sess.run([pred], feed_dict={self.input_t:
-                                                     input_np})[0]
-
+            return nn.tf_sess.run([pred], feed_dict={self.input_t: input_np})[0]
+            
+        def get_all_layer_outputs(input_np):
+            return nn.tf_sess.run(self.layer_tensors, feed_dict={self.input_t: input_np})
+            
         self.net_run = net_run
-
+        self.get_all_layer_outputs = get_all_layer_outputs
+        
         self.initialized = True
         # Loading/initializing all models weights
         for model, filename in self.model_filename_list:
@@ -78,7 +91,7 @@ class XSegNet(object):
 
         if export_weights:
             nn.tf.enable_resource_variables()
-            nn.tf.saved_model.simple_save(nn.tf_sess, r".\\saved_model", inputs={"input": self.input_t}, outputs={"output": pred})
+            nn.tf.saved_model.simple_save(nn.tf_sess, r"./saved_model", inputs={"input": self.input_t}, outputs={"output": pred})
 
     def get_resolution(self):
         return self.resolution
@@ -99,3 +112,42 @@ class XSegNet(object):
             result = result[0]
 
         return result
+
+    def get_layer_outputs(self, input_image):
+        """Get outputs from all intermediate layers"""
+        if not self.initialized:
+            return [0.5 * np.ones((self.resolution, self.resolution, 1),
+                                 nn.floatx.as_numpy_dtype)]
+
+        input_shape_len = len(input_image.shape)
+        if input_shape_len == 3:
+            input_image = input_image[None, ...]
+
+        # Store intermediate layer tensors
+        self.layer_tensors = []
+        def collect_layer_tensors(layer):
+            if isinstance(layer, nn.Conv2D) or isinstance(layer, nn.Conv2DTranspose):
+                self.layer_tensors.append(layer.get_output_tensor())
+        self.model.traverse_layers(collect_layer_tensors)
+        
+        # Add final output to layer tensors
+        self.layer_tensors.append(self.model(self.input_t)[1])
+        
+        # Run model and get all layer outputs
+        outputs = nn.tf_sess.run(self.layer_tensors, feed_dict={self.input_t: input_image})
+        
+        # Convert to single image if input was single image
+        if input_shape_len == 3:
+            outputs = [out[0] for out in outputs]
+            
+        return outputs
+        if input_shape_len == 3:
+            input_image = input_image[None, ...]
+
+        outputs = self.get_all_layer_outputs(input_image)
+        
+        # Convert to single image if input was single image
+        if input_shape_len == 3:
+            outputs = [out[0] for out in outputs]
+            
+        return outputs

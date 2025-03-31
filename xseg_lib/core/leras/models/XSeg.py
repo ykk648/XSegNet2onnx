@@ -29,12 +29,19 @@ class XSeg(nn.ModelBase):
                 self.conv = nn.Conv2DTranspose(in_ch,
                                                out_ch,
                                                kernel_size=3,
-                                               padding='SAME')
+                                               padding='VALID')
                 self.frn = nn.FRNorm2D(out_ch)
                 self.tlu = nn.TLU(out_ch)
 
             def forward(self, x):
                 x = self.conv(x)
+                # Crop to match the original 'SAME' padding output size
+                # When using VALID padding with kernel_size=3, stride=2, 
+                # the output is 1 pixel larger in each dimension
+                input_shape = tf.shape(x)
+                h, w = input_shape[1], input_shape[2]
+                target_h, target_w = h-1, w-1
+                x = x[:, :target_h, :target_w, :]
                 x = self.frn(x)
                 x = self.tlu(x)
                 return x

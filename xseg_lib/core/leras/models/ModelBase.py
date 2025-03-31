@@ -100,6 +100,21 @@ class ModelBase(nn.Saveable):
             else:
                 layers += layer.get_layers()
         return layers
+        
+    def traverse_layers(self, callback):
+        """Traverse all layers in the model and call the callback function for each layer"""
+        if not self.built:
+            self.build()
+            
+        def _traverse(layer):
+            if isinstance(layer, nn.LayerBase):
+                callback(layer)
+            elif isinstance(layer, ModelBase):
+                for sublayer in layer.layers:
+                    _traverse(sublayer)
+                    
+        for layer in self.layers:
+            _traverse(layer)
 
     #override
     def on_build(self, *args, **kwargs):

@@ -39,7 +39,7 @@ def apply_xseg(xseg, img):
     return mask
 
 if __name__ == "__main__":
-    img_file = "1.png"
+    img_file = "weights/tgt.jpg"
     img = cv2.imread(img_file)
     xseg = load_xseg_model()
 
@@ -50,6 +50,7 @@ if __name__ == "__main__":
         print("time: ", t1 - t0)
 
     mask[mask == 1] = 255
-    cv2.imshow("mask", mask)
-    cv2.waitKey(-1)
-    cv2.destroyAllWindows()
+    # cv2.imshow("mask", mask)
+    # cv2.waitKey(-1)
+    # cv2.destroyAllWindows()
+    cv2.imwrite('mask_onnx.png', mask)
