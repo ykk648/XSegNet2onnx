@@ -1,10 +1,11 @@
 import cv2
 import numpy as np
 import torch
+import time
 
 def test_torch_model(image_path, model_path, resolution=256):
     # Load model
-    model = torch.load(model_path, weights_only=False)
+    model = torch.load(model_path, weights_only=False).cuda()
     model.eval()
     
     # Load and preprocess image
@@ -14,14 +15,19 @@ def test_torch_model(image_path, model_path, resolution=256):
         img = cv2.resize(img, (resolution, resolution), interpolation=cv2.INTER_LANCZOS4)
 
     # Convert to tensor
-    img_tensor = torch.from_numpy(img).unsqueeze(0)
+    img_tensor = torch.from_numpy(img).unsqueeze(0).cuda()
     
     # Inference
-    with torch.no_grad():
-        pred = model(img_tensor)
+    for i in range(10):
+        t0 = time.time()
+        with torch.no_grad():
+            pred = model(img_tensor)
+        t1 = time.time()
+        print("time: ", t1 - t0)
+
     
     # Post-process
-    pred = pred.squeeze().numpy()
+    pred = pred.squeeze().cpu().numpy()
     pred[pred < 0.5] = 0  # Match TF threshold
     pred[pred >= 0.5] = 1
     pred = (pred * 255).astype(np.uint8)

@@ -2,9 +2,10 @@ import onnx
 import torch
 from onnx2torch import convert
 import numpy as np
+from pathlib import Path
 
 # Path to ONNX model
-onnx_model_path = "./xseg.onnx"
+onnx_model_path = str(Path("./xseg_sim.onnx"))
 # You can pass the path to the onnx model to convert it or...
 torch_model_1 = convert(onnx_model_path)
 

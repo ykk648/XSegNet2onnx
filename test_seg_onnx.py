@@ -2,10 +2,15 @@ import onnxruntime
 import cv2
 import numpy as np
 import time
+from pathlib import Path
+
+# onnx 1.21.0
+onnxruntime.preload_dlls()
+
 
 def load_xseg_model():
     xseg_session = onnxruntime.InferenceSession(
-        "./xseg.onnx", providers=["CUDAExecutionProvider"])
+        str(Path("./xseg_sim.onnx")), providers=["CUDAExecutionProvider"])
     return xseg_session
 
 def infer(xseg, input_image):

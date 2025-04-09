@@ -14,7 +14,8 @@ pip install -r requirements.txt
 1. put DeepFaceLab XSegNet weights to weights folder, such as `weights/XSeg_256.npy`.
 3. Then run `python test_seg.py` to generate tensorflow SavedModel format checkpoint file to `saved_model` directory.
 5. convert model to onnx file, `python -m tf2onnx.convert --saved-model ./saved_model/ --output xseg.onnx  --tag serve`.
-6. (optinal) install onnxsim `pip install onnxsim` and run `onnxsim ./xseg.onnx ./xseg.sim.onnx`.
+6. (optinal) install onnxsim `pip install onnxsim` and run `onnxsim ./xseg.onnx ./xseg_sim.onnx`.
+7. `python onx2torch.py`
 
 ## use onnx file to predict
 see `test_seg_onnx.py`.
