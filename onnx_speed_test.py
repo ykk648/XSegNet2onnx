@@ -8,7 +8,7 @@ import onnxruntime
 onnxruntime.preload_dlls()
 
 
-onnx_p = str(Path(""))
+onnx_p = str(Path("./xseg.onnx"))
 input_dynamic_shape = [(1, 256, 256, 3)]
 
 # # cpu

@@ -17,8 +17,10 @@ pip install -r requirements.txt
 6. (optinal) install onnxsim `pip install onnxsim` and run `onnxsim ./xseg.onnx ./xseg_sim.onnx`.
 7. `python onx2torch.py`
 
-## use onnx file to predict
-see `test_seg_onnx.py`.
+## use onnx/torch/jit file to predict
+1. `python test_seg_onnx.py`.
+1. `python test_seg_torch.py`.
+1. `python export_jit_model`.
 
 # issue
 Because of [Conv2d_transpose requires asymmetric padding which the CUDA EP currently does not support #11312](https://github.com/microsoft/onnxruntime/issues/11312), XSegNet OnnxRuntime Conv2d_transpose layer does not support CudaExcuation.
